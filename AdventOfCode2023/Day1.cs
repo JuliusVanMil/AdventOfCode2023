@@ -27,20 +27,14 @@ public class Day1
         foreach(var line in lines)
         {
             var digits = line.Where(char.IsDigit).ToArray();
+            var hasDigits = digits.Any();
+            string first = hasDigits ? digits.First().ToString() : "";
+            string last = hasDigits ? digits.Last().ToString() : "";
+            int firstDigitIndex = hasDigits ? line.IndexOf(first) : -1;
+            int lastDigitIndex= hasDigits ? line.LastIndexOf(last) : -1;
+
             var firstIndices = numbers.Select(n => line.IndexOf(n)).ToList();
             var lastIndices = numbers.Select(n => line.LastIndexOf(n)).ToList();
-
-            string first = "";
-            string last = "";
-            int firstDigitIndex = -1;
-            int lastDigitIndex= -1;
-            if(digits.Any()) {
-                first = digits.First().ToString();
-                last = digits.Last().ToString();
-                firstDigitIndex = line.IndexOf(first);
-                lastDigitIndex = line.LastIndexOf(last);
-            }
-
             if (firstIndices.Any(i => i >= 0))
             {
                 var lowestIndex = firstIndices.Where(x => x >= 0).Min();
