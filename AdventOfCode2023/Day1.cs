@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace AdventOfCode2023;
+﻿namespace AdventOfCode2023;
 
 public class Day1
 {
