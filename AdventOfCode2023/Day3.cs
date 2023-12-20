@@ -39,39 +39,38 @@ namespace AdventOfCode2023
         private static IEnumerable<int> FindNumbersAdjacentToIndex(string current, int currentSymbolIndex)
         {
             var numbers = new List<int>();
-            var sb = new StringBuilder();
-
-            for (int j = currentSymbolIndex - 1; j >= 0 && char.IsDigit(current[j]); j--)
-            {
-                sb.Insert(0, current[j]);
-            }
-
-            var foundNumber = sb.Length > 0;
             var isCurrentCharacterNumber = char.IsDigit(current[currentSymbolIndex]);
+            var numberBefore = ExtractNumber(current, currentSymbolIndex, -1, out var foundNumberBefore);
+            var numberAfter = ExtractNumber(current, currentSymbolIndex, 1, out var foundNumberAfter);
 
             if (isCurrentCharacterNumber)
             {
-                sb.Append(current[currentSymbolIndex]);
+                numbers.Add(int.Parse($"{numberBefore}{current[currentSymbolIndex]}{numberAfter}"));
             }
-
-            if (!isCurrentCharacterNumber && foundNumber)
+            else
             {
-                numbers.Add(int.Parse(sb.ToString()));
-                sb.Clear();
-            }
+                if (foundNumberBefore)
+                    numbers.Add(int.Parse($"{numberBefore}"));
 
-            for (int j = currentSymbolIndex + 1; j < current.Length && char.IsDigit(current[j]); j++)
-            {
-                sb.Append(current[j]);
-            }
-
-            if (sb.Length > 0)
-            {
-                numbers.Add(int.Parse(sb.ToString()));
-                sb.Clear();
+                if (foundNumberAfter)
+                    numbers.Add(int.Parse($"{numberAfter}"));
             }
 
             return numbers;
+        }
+
+        private static string ExtractNumber(string line, int startIndex, int step, out bool foundNumber)
+        {
+            var sb = new StringBuilder();
+            for (int j = startIndex + step; j >= 0 && j < line.Length && char.IsDigit(line[j]); j += step)
+            {
+                if (step > 0)
+                    sb.Append(line[j]);
+                else
+                    sb.Insert(0, line[j]);
+            }
+            foundNumber = sb.Length > 0;
+            return sb.ToString();
         }
 
         private static List<int> GetSymbolIndices(string line)
