@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode2023;
+﻿using System.Data.SqlTypes;
+
+namespace AdventOfCode2023;
 
 public class Day2
 {
@@ -11,6 +13,13 @@ public class Day2
         var games = lines.Select(ParseGame).ToList();
         games.RemoveAll(g => g.Red > maxRed || g.Green > maxGreen || g.Blue > maxBlue);
         return games.Sum(g => g.Id).ToString();
+    }
+
+    public static string Part2()
+    {
+        var lines = File.ReadAllLines("Day2Input.txt");
+        var games = lines.Select(ParseGame).ToList();
+        return games.Sum(g => g.Power).ToString();
     }
 
     private static Game ParseGame(string line)
@@ -52,5 +61,6 @@ public class Day2
         public int Red { get; set; }
         public int Green { get; set; }
         public int Blue { get; set; }
+        public int Power => Red * Green * Blue;
     }
 }
