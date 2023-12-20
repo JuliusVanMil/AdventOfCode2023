@@ -49,18 +49,9 @@ namespace AdventOfCode2023
             var numbers = new List<int>();
             var sb = new StringBuilder();
 
-            for (int j = currentSymbolIndex - 1; j >= 0; j--)
+            for (int j = currentSymbolIndex - 1; j >= 0 && char.IsDigit(current[j]); j--)
             {
-                var currentChar = current[j];
-
-                if (char.IsDigit(currentChar))
-                {
-                    sb.Insert(0, currentChar);
-                }
-                else
-                {
-                    break;
-                }
+                sb.Insert(0, current[j]);
             }
 
             var foundNumber = sb.Length > 0;
@@ -77,18 +68,9 @@ namespace AdventOfCode2023
                 sb.Clear();
             }
 
-            for (int j = currentSymbolIndex + 1; j < current.Length; j++)
+            for (int j = currentSymbolIndex + 1; j < current.Length && char.IsDigit(current[j]); j++)
             {
-                var currentChar = current[j];
-
-                if (char.IsDigit(currentChar))
-                {
-                    sb.Append(currentChar);
-                }
-                else
-                {
-                    break;
-                }
+                sb.Append(current[j]);
             }
 
             if (sb.Length > 0)
