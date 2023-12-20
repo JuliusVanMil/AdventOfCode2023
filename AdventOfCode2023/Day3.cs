@@ -7,19 +7,25 @@ namespace AdventOfCode2023
         public static string Part1()
         {
             var lines = File.ReadAllLines("Day3Input.txt");
+            var adjacentNumbers = FindAdjacentNumbersInLines(lines);
+            return adjacentNumbers.Sum().ToString();
+        }
+
+        private static List<int> FindAdjacentNumbersInLines(string[] lines)
+        {
             var adjacentNumbers = new List<int>();
 
             for (int i = 0; i < lines.Length; i++)
             {
-                string current = lines[i];
-                string previous = i > 0 ? lines[i - 1] : "";
-                string next = i < lines.Length - 1 ? lines[i + 1] : "";
-                adjacentNumbers.AddRange(current.FindNumbersAdjacentToLine(previous));
-                adjacentNumbers.AddRange(current.FindNumbersAdjacentToLine(current));
-                adjacentNumbers.AddRange(current.FindNumbersAdjacentToLine(next));
+                string currentLine = lines[i];
+                string previousLine = i > 0 ? lines[i - 1] : "";
+                string nextLine = i < lines.Length - 1 ? lines[i + 1] : "";
+                adjacentNumbers.AddRange(currentLine.FindNumbersAdjacentToLine(previousLine));
+                adjacentNumbers.AddRange(currentLine.FindNumbersAdjacentToLine(currentLine));
+                adjacentNumbers.AddRange(currentLine.FindNumbersAdjacentToLine(nextLine));
             }
 
-            return adjacentNumbers.Sum().ToString();
+            return adjacentNumbers;
         }
     }
 
