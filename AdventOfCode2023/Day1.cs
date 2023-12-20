@@ -46,7 +46,6 @@ public class Day1
                     last = lastIndices.IndexOf(highestIndex).ToString();
                 }
             }
-            Console.WriteLine($"{line}: {first}{last}");
             sum += int.Parse($"{first}{last}");
         }
         return sum;

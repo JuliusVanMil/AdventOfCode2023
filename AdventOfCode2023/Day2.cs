@@ -6,12 +6,9 @@ public class Day2
 {
     public static string Part1()
     {
-        int maxRed = 12;
-        int maxGreen = 13;
-        int maxBlue = 14;
         var lines = File.ReadAllLines("Day2Input.txt");
         var games = lines.Select(ParseGame).ToList();
-        games.RemoveAll(g => g.Red > maxRed || g.Green > maxGreen || g.Blue > maxBlue);
+        games.RemoveAll(g => g.Red > 12 || g.Green > 13 || g.Blue > 14);
         return games.Sum(g => g.Id).ToString();
     }
 
