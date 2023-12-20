@@ -33,18 +33,10 @@ namespace AdventOfCode2023
 
         public static IEnumerable<int> FindNumbersAdjacentToLine(this string current, string line)
         {
-            var adjacentNumbers = new List<int>();
-            var symbolIndices = GetSymbolIndices(line);
-
-            foreach (var symbolIndex in symbolIndices)
-            {
-                adjacentNumbers.AddRange(TraverseCharacters(current, symbolIndex));
-            }
-
-            return adjacentNumbers;
+            return GetSymbolIndices(line).Select(i => FindNumbersAdjacentToIndex(current, i)).SelectMany(x => x).ToList();
         }
 
-        private static IEnumerable<int> TraverseCharacters(string current, int currentSymbolIndex)
+        private static IEnumerable<int> FindNumbersAdjacentToIndex(string current, int currentSymbolIndex)
         {
             var numbers = new List<int>();
             var sb = new StringBuilder();
