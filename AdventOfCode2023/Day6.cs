@@ -19,30 +19,17 @@ public class Day6
 
     public static List<Race> ParseRaces(string input)
     {
-        var timeline = input
-            .Split(Environment.NewLine)
-            .First();
-        var distanceline = input
-            .Split(Environment.NewLine)
-            .Last();
-
-        var times = timeline.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1..];
-        var distances = distanceline.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1..];
-        return times.Select((time, index) => new Race(long.Parse(time), long.Parse(distances[index]))).ToList();
+        var lines = input.Split(Environment.NewLine);
+        var times = lines[0].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1..];
+        var distances = lines[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1..];
+        return times.Zip(distances, (time, distance) => new Race(long.Parse(time), long.Parse(distance))).ToList();
     }
 
     public static Race ParseRaces2(string input)
     {
-        var timeline = input
-            .Split(Environment.NewLine)
-            .First();
-        var distanceline = input
-            .Split(Environment.NewLine)
-            .Last();
-
-        var time = timeline.Replace(" ", "").Split(':').Last();
-        var distance = distanceline.Replace(" ", "").Split(':').Last();
-
+        var lines = input.Split(Environment.NewLine);
+        var time = lines[0].Split(':').Last().Replace(" ", "");
+        var distance = lines[1].Split(':').Last().Replace(" ", "");;
         return new Race(long.Parse(time), long.Parse(distance));
     }
 
