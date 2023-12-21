@@ -12,19 +12,18 @@ public class Day4
     {
         var lines = File.ReadAllLines("Day4Input.txt");
         var scratchcards = lines.Select(ParseScratchcard).ToList();
-        for (int i = 0; i < scratchcards.Count; i++)
-        {
-            var scratchcard = scratchcards.ElementAt(i);
-            for (int j = 1; j <= scratchcard.AmountOfWinningNumbers; j++)
-            {
-                for (int k = 0; k < scratchcard.AmountOfCopies; k++)
-                {
-                    var scratchcardToCopy = scratchcards.ElementAt(i + j);
-                    scratchcardToCopy.Copy();
-                }
-            }
-        }
+        scratchcards.Select((card, index) => new { card, index }).ToList()
+            .ForEach(x => CopyNextCardsInLine(scratchcards, x.index, x.card));
         return scratchcards.Select(x => x.AmountOfCopies).Sum().ToString();
+    }
+
+    private static void CopyNextCardsInLine(List<Scratchcard> scratchcards, int i, Scratchcard scratchcard)
+    {
+        for (int j = 1; j <= scratchcard.AmountOfWinningNumbers; j++)
+        {
+            var scratchcardToCopy = scratchcards[i + j];
+            scratchcard.CopyNextScratchcard(scratchcardToCopy);
+        }
     }
 
     public static Scratchcard ParseScratchcard(string line)
@@ -35,21 +34,24 @@ public class Day4
         return new Scratchcard(winningNumbers, numbersToCheck);
     }
 
-    public class Scratchcard {
-        public Scratchcard(IEnumerable<int> winningNumbers, IEnumerable<int> numbersToCheck)
-        {
-            WinningNumbers = winningNumbers;
-            NumbersToCheck = numbersToCheck;
-        }
-        public IEnumerable<int> WinningNumbers { get; set; }
-        public IEnumerable<int> NumbersToCheck { get; set; }
+    public record Scratchcard(IEnumerable<int> WinningNumbers, IEnumerable<int> NumbersToCheck)
+    {
         public int AmountOfCopies { get; set; } = 1;
         public bool IsWinning => WinningNumbers.Any(NumbersToCheck.Contains);
         public int AmountOfWinningNumbers => WinningNumbers.Count(NumbersToCheck.Contains);
         public double Value => IsWinning ? Math.Pow(2, AmountOfWinningNumbers - 1) : 0;
+
         public void Copy()
         {
             AmountOfCopies++;
+        }
+
+        public void CopyNextScratchcard(Scratchcard scratchcardToCopy)
+        {
+            for (int k = 0; k < AmountOfCopies; k++)
+            {
+                scratchcardToCopy.Copy();
+            }
         }
     }
 }
