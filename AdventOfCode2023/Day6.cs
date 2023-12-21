@@ -35,12 +35,9 @@ public class Day6
 
     public record Race(long Time, long Distance)
     {
-        public long CalculateNumberOfWins()
-        {
-            return GetLastRace() - GetFirstRace() + 1;
-        }
+        public long CalculateNumberOfWins() => GetLastWinningRace() - GetFirstWinningRace() + 1;
 
-        public long GetFirstRace()
+        public long GetFirstWinningRace()
         {
             for (var i = 0L; i < Time; i++)
             {
@@ -50,7 +47,7 @@ public class Day6
             return 0;
         }
 
-        public long GetLastRace()
+        public long GetLastWinningRace()
         {
             for (var i = Time; i > 0; i--)
             {
@@ -64,7 +61,6 @@ public class Day6
         {
             var timeLeft = Time - pressedTime;
             var travelledDistance = timeLeft * pressedTime;
-
             return travelledDistance > Distance;
         }
     }
