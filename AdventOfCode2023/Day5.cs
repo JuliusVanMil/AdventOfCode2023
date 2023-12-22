@@ -10,13 +10,13 @@ public class Day5
         return seeds.Select(s => GetDestination(s, maps)).Min().ToString();
     }
 
-    private static List<long> ParseSeeds(string[] lines) => lines[0].Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(long.Parse).ToList();
-
     public static string Part2()
     {
         var lines = File.ReadAllLines("Day5Input.txt");
         return "";
     }
+
+    private static List<long> ParseSeeds(string[] lines) => lines[0].Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(long.Parse).ToList();
 
     private static List<Map> ParseMaps(string[] lines)
     {
