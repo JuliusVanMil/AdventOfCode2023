@@ -5,7 +5,7 @@ public class Day5
     public static string Part1()
     {
         var lines = File.ReadAllLines("Day5Input.txt");
-        var seeds = ParseSeeds(lines);
+        var seeds = ParseSeeds(lines[0]);
         List<Map> maps = ParseMaps(lines);
         return seeds.Select(s => GetDestination(s, maps)).Min().ToString();
     }
@@ -13,10 +13,25 @@ public class Day5
     public static string Part2()
     {
         var lines = File.ReadAllLines("Day5Input.txt");
-        return "";
+        var seedRanges = ParseSeedranges(lines[0]);
+        List<Map> maps = ParseMaps(lines);
+        return Task.WhenAll(
+            seedRanges.Select(async sr => await sr.GetClosestSeedAsync(maps))
+        ).Result.Min().ToString();
     }
 
-    private static List<long> ParseSeeds(string[] lines) => lines[0].Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(long.Parse).ToList();
+    private static List<long> ParseSeeds(string line) => line.Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(long.Parse).ToList();
+
+    private static List<SeedRange> ParseSeedranges(string line)
+    {
+        var seedLine = line.Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var seedRanges = new List<SeedRange>();
+        for (int i = 0; i < seedLine.Length; i += 2)
+        {
+            seedRanges.Add(new SeedRange(long.Parse(seedLine[i]), long.Parse(seedLine[i + 1])));
+        }
+        return seedRanges;
+    }
 
     private static List<Map> ParseMaps(string[] lines)
     {
@@ -67,6 +82,28 @@ public class Day5
         return maps.Aggregate(source, (distance, map) => map.MapToDestination(distance));
     }
 
+    public record SeedRange(long Start, long Length)
+    {
+        public long End => Start + Length;
+
+        public Task<long> GetClosestSeedAsync(List<Map> maps)
+        {
+            return Task.Run(() => GetClosestSeed(maps));
+        }
+
+        public long GetClosestSeed(List<Map> maps)
+        {
+            var closest = long.MaxValue;
+            for (long i = Start; i < End; i++)
+            {
+                var destination = GetDestination(i, maps);
+                if (destination < closest)
+                    closest = destination;
+            }
+            return closest;
+        }
+    }
+
     public record Map(List<RangeMap> RangeMaps) {
         public long MapToDestination(long source) {
             var rangeMap = RangeMaps.FirstOrDefault(r => r.IsInRange(source));
@@ -82,7 +119,14 @@ public class Day5
 
     public record RangeMap(long DestinationStart, long SourceStart, long Length)
     {
-        public bool IsInRange(long source) => source >= SourceStart && source <= SourceStart + Length;
+        public long SourceEnd => SourceStart + Length;
+
+        public long DestinationEnd => DestinationStart + Length;
+
+        public bool IsInRange(long source) => source >= SourceStart && source <= SourceEnd;
+
+        public bool IsInRange(SeedRange seedRange) => seedRange.Start <= SourceEnd && SourceStart < seedRange.End;
+
         public static RangeMap Parse(string line)
         {
             var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
