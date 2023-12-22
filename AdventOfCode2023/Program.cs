@@ -2,4 +2,4 @@
 
 using AdventOfCode2023;
 
-Console.WriteLine(Day7.Part1());
+Console.WriteLine(Day7.Part2());
