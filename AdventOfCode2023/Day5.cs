@@ -5,10 +5,12 @@ public class Day5
     public static string Part1()
     {
         var lines = File.ReadAllLines("Day5Input.txt");
-        var seeds = lines[0].Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(long.Parse).ToList();
+        var seeds = ParseSeeds(lines);
         List<Map> maps = ParseMaps(lines);
         return seeds.Select(s => GetDestination(s, maps)).Min().ToString();
     }
+
+    private static List<long> ParseSeeds(string[] lines) => lines[0].Split(':')[1].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(long.Parse).ToList();
 
     public static string Part2()
     {
